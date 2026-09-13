@@ -58,6 +58,8 @@ export default async function RootLayout({
             <p>ひとつの問いが、誰かの視点をひらく。</p>
           </div>
           <div className="footer-right">
+            <Link href="/privacy">プライバシーポリシー</Link>
+            <Link href="/terms">利用規約</Link>
             <Link href="/submit">
               あなたの会話を届ける <ArrowUpRight size={15} />
             </Link>

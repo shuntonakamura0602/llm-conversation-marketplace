@@ -30,6 +30,12 @@ export default async function Login({
             認証が完了しませんでした。もう一度お試しください。
           </p>
         )}
+        <p className="field-help">
+          Googleログインでアカウントを作成します。
+          <Link href="/terms">利用規約</Link>と
+          <Link href="/privacy">プライバシーポリシー</Link>
+          をご確認のうえ、同意してログインしてください。
+        </p>
         {configured ? (
           <LoginButtons />
         ) : (

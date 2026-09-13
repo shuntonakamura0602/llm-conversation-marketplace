@@ -1551,3 +1551,34 @@ textarea::placeholder {
   font-size: 12px;
   margin-bottom: 8px;
 }
+
+.legal-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 56px 24px 80px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.legal-page h1 {
+  font-size: clamp(26px, 5vw, 38px);
+  margin: 24px 0 12px;
+}
+.legal-page h2 {
+  font-size: 21px;
+  margin: 32px 0 12px;
+}
+.legal-page p {
+  margin: 16px 0;
+}
+.legal-page ul {
+  padding-left: 24px;
+  list-style: disc;
+}
+.legal-page li {
+  margin: 12px 0;
+}
+.legal-page a,
+.login-card .field-help a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
