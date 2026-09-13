@@ -1,3 +1,4 @@
+import { PaidGate, PaywallSettings } from "@/components/paywall";
 import { MessageContent } from "@/components/message-content";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -40,7 +41,9 @@ export default async function Detail({
   return (
     <main className="detail-shell">
       <PageEvent type="conversation_view" id={id} />
-      <ReadingTracker id={id} />
+      {(c.free_message_count == null || me?.id === c.user_id) && (
+        <ReadingTracker id={id} />
+      )}
       <article className="reading">
         <Link className="back-link" href="/#explore">
           <ArrowLeft size={15} />
@@ -57,7 +60,15 @@ export default async function Detail({
           </div>
         )}
         {me?.id === c.user_id && (
-          <VisibilityForm id={id} published={c.published} />
+          <>
+            {" "}
+            <VisibilityForm id={id} published={c.published} />
+            <PaywallSettings
+              id={id}
+              messages={c.messages}
+              boundary={c.free_message_count}
+            />
+          </>
         )}
         <div className="detail-tags tags">
           {c.tags.map((t) => (
@@ -89,7 +100,7 @@ export default async function Detail({
           </span>
           <span>
             <MessageSquare size={14} />
-            {c.messages.length} メッセージ
+            {c.total_message_count ?? c.messages.length} メッセージ
           </span>
           <span>
             <Clock3 size={14} />約{c.estimated_reading_minutes}分
@@ -109,6 +120,11 @@ export default async function Detail({
         <div className="conversation-body">
           {c.messages.map((m, i) => (
             <section className={`message ${m.role}`} key={i}>
+              {i === c.free_message_count && (
+                <p className="paid-divider">
+                  ここから有料 · 投稿者として全文を表示しています
+                </p>
+              )}
               <div className="message-label">
                 <span className={m.role === "user" ? "human-icon" : "ai-icon"}>
                   {m.role === "user" ? "Q" : "✳"}
@@ -120,6 +136,15 @@ export default async function Detail({
             </section>
           ))}
         </div>
+        {c.free_message_count != null && me?.id !== c.user_id && (
+          <PaidGate
+            id={id}
+            remaining={
+              (c.total_message_count ?? c.messages.length) -
+              c.free_message_count
+            }
+          />
+        )}
         <div className="end-mark">◇</div>
         <Feedback key={id} id={id} demo={id.startsWith("sample-")} />
       </article>

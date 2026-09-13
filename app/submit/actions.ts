@@ -62,21 +62,36 @@ export async function submitConversation(
         error instanceof Error ? error.message : "会話形式を確認してください。",
     };
   }
-  const { data, error } = await db
-    .from("conversations")
-    .insert({
-      user_id: user.id,
-      title,
-      description,
-      llm,
-      messages,
-      tags,
-      summary,
-      published: form.get("visibility") === "public",
-      estimated_reading_minutes: readingMinutes(messages),
-    })
-    .select("id")
-    .single();
+  const rawBoundary = String(form.get("free_message_count") ?? "");
+  const boundary = rawBoundary === "" ? null : Number(rawBoundary);
+  if (
+    boundary !== null &&
+    (!Number.isInteger(boundary) || boundary < 2 || boundary >= messages.length)
+  )
+    return { error: "無料部分の区切りを選び直してください。" };
+  const content = {
+    title,
+    description,
+    llm,
+    messages,
+    tags,
+    summary,
+    published: form.get("visibility") === "public",
+    estimated_reading_minutes: readingMinutes(messages),
+  };
+  const result =
+    boundary === null
+      ? await db
+          .from("conversations")
+          .insert({ ...content, user_id: user.id })
+          .select("id")
+          .single()
+      : await db.rpc("create_paid_conversation", {
+          p_content: content,
+          p_free_count: boundary,
+        });
+  const { error } = result;
+  const data = boundary === null ? result.data : { id: result.data };
   if (error)
     return {
       error:
@@ -137,4 +152,30 @@ export async function setVisibility(_state: { error: string }, form: FormData) {
   revalidatePath("/");
   revalidatePath("/users", "layout");
   return { error: "" };
+}
+
+export async function setPaywall(
+  _state: { error: string; success: string },
+  form: FormData,
+) {
+  const db = await supabase();
+  if (!db || !(await db.auth.getUser()).data.user)
+    return { error: "ログインしてください。", success: "" };
+  const id = String(form.get("id") ?? "");
+  const raw = String(form.get("free_message_count") ?? "");
+  const boundary = raw === "" ? null : Number(raw);
+  if (boundary !== null && (!Number.isInteger(boundary) || boundary < 2))
+    return { error: "区切りを確認してください。", success: "" };
+  const { error } = await db.rpc("set_conversation_paywall", {
+    p_id: id,
+    p_free_count: boundary,
+  });
+  if (error)
+    return {
+      error:
+        "保存できませんでした。有料部分用のSQLが適用済みか確認し、再試行してください。",
+      success: "",
+    };
+  revalidatePath("/", "layout");
+  return { error: "", success: "無料・有料の区切りを保存しました。" };
 }

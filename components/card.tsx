@@ -31,6 +31,9 @@ export function Card({
         }
         conversationId={c.id}
       >
+        {c.free_message_count != null && (
+          <span className="paid-badge">一部有料・β版</span>
+        )}
         <h3>
           {c.title}
           <ArrowUpRight size={18} />
@@ -59,7 +62,7 @@ export function Card({
         <div className="stats">
           <span>
             <MessageSquare size={13} />
-            {c.messages.length}
+            {c.total_message_count ?? c.messages.length}
           </span>
           <span>
             <Clock3 size={13} />

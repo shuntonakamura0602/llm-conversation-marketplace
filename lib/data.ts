@@ -28,6 +28,19 @@ export async function conversation(id: string): Promise<Conversation | null> {
     if (error.code === "22P02") return null;
     throw new Error("会話を取得できませんでした。");
   }
+  if (data?.free_message_count != null) {
+    const user = (await db.auth.getUser()).data.user;
+    if (user?.id === data.user_id) {
+      const privateResult = await db
+        .from("conversation_paid_content")
+        .select("messages")
+        .eq("conversation_id", id)
+        .single();
+      if (privateResult.error)
+        throw new Error("有料本文を取得できませんでした。");
+      data.messages = privateResult.data.messages;
+    }
+  }
   return data as unknown as Conversation | null;
 }
 export async function author(username: string): Promise<Author | null> {

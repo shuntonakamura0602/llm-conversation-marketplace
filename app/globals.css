@@ -1511,3 +1511,43 @@ textarea::placeholder {
     align-self: stretch;
   }
 }
+
+.paywall-settings {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid #d9dfd8;
+  border-radius: 12px;
+}
+.paywall-settings summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.paywall-settings select {
+  width: 100%;
+  margin-top: 12px;
+}
+.paid-gate {
+  margin: 36px 0;
+  padding: 40px 24px;
+  text-align: center;
+  border: 1px solid #bccabb;
+  border-radius: 16px;
+  background: #f0f4ed;
+}
+.paid-gate h2 {
+  margin: 14px 0;
+}
+.paid-gate p {
+  margin: 14px 0;
+}
+.paid-divider {
+  border-top: 2px dashed #82957c;
+  padding-top: 18px;
+  color: #53694e;
+}
+.paid-badge {
+  display: inline-block;
+  color: #53694e;
+  font-size: 12px;
+  margin-bottom: 8px;
+}

@@ -14,6 +14,8 @@ export type Conversation = {
   user_id: string;
   llm: string;
   messages: Message[];
+  free_message_count?: number | null;
+  total_message_count?: number | null;
   tags: string[];
   summary: string[];
   created_at: string;

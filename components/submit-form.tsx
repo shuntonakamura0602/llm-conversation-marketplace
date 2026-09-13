@@ -3,6 +3,7 @@ import { useActionState, useState } from "react";
 import { Eye, Send, ShieldCheck } from "lucide-react";
 import { submitConversation } from "@/app/submit/actions";
 import { parseMessages, readingMinutes } from "@/lib/parser";
+import { PaywallFields } from "./paywall";
 import { ShareImporter } from "./share-importer";
 import type { Message } from "@/lib/types";
 export function SubmitForm() {
@@ -174,6 +175,12 @@ export function SubmitForm() {
             {messages.length} メッセージ · 約{readingMinutes(messages)}
             分で読めます
           </p>
+        )}
+        {messages && (
+          <PaywallFields
+            key={`${importRevision}-${body}`}
+            messages={messages}
+          />
         )}
         <label>
           公開設定
