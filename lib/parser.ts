@@ -37,3 +37,24 @@ export function readingMinutes(messages: Message[]) {
     Math.ceil(messages.reduce((n, m) => n + m.content.length, 0) / 600),
   );
 }
+
+export function validateImportedMessages(value: unknown): Message[] {
+  if (!Array.isArray(value) || value.length < 2 || value.length > 10000)
+    throw new Error("取り込んだ会話の形式を確認してください。");
+  const messages: Message[] = value.map((item: unknown, i) => {
+    if (
+      !item ||
+      typeof item !== "object" ||
+      !("role" in item) ||
+      !("content" in item) ||
+      item.role !== (i % 2 === 0 ? "user" : "assistant") ||
+      typeof item.content !== "string" ||
+      !item.content.trim()
+    )
+      throw new Error("取り込んだ会話の話者・本文を確認してください。");
+    return { role: i % 2 === 0 ? "user" : "assistant", content: item.content };
+  });
+  if (messages.reduce((n, m) => n + m.content.length, 0) > 100000)
+    throw new Error("会話本文は10万文字以内にしてください。");
+  return messages;
+}

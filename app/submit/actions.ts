@@ -1,6 +1,10 @@
 "use server";
 import { supabase } from "@/lib/supabase";
-import { parseMessages, readingMinutes } from "@/lib/parser";
+import {
+  parseMessages,
+  readingMinutes,
+  validateImportedMessages,
+} from "@/lib/parser";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 export async function submitConversation(
@@ -46,7 +50,12 @@ export async function submitConversation(
     return { error: "論点は各200文字以内で、8行まで入力してください。" };
   let messages;
   try {
-    messages = parseMessages(body);
+    const imported = String(form.get("importedMessages") ?? "");
+    if (imported.length > 500000)
+      return { error: "取り込んだ会話が大きすぎます。会話を分けてください。" };
+    messages = imported
+      ? validateImportedMessages(JSON.parse(imported))
+      : parseMessages(body);
   } catch (error) {
     return {
       error:
