@@ -1,4 +1,5 @@
 "use client";
+import { MarkdownContent } from "@/components/markdown-content";
 import { useState } from "react";
 import { Download, Link2 } from "lucide-react";
 import type { ImportedConversation } from "@/lib/share-import";
@@ -92,7 +93,7 @@ export function ShareImporter({
               {result.messages.map((m, i) => (
                 <section className={`message ${m.role}`} key={i}>
                   <strong>{m.role === "user" ? "You" : "ChatGPT"}</strong>
-                  <div className="message-content">{m.content}</div>
+                  <MarkdownContent content={m.content} />
                 </section>
               ))}
             </div>

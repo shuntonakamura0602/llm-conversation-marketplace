@@ -179,3 +179,26 @@ export async function setPaywall(
   revalidatePath("/", "layout");
   return { error: "", success: "無料・有料の区切りを保存しました。" };
 }
+
+export async function deleteConversation(
+  _state: { error: string },
+  form: FormData,
+) {
+  const db = await supabase();
+  const user = db ? (await db.auth.getUser()).data.user : null;
+  if (!db || !user) return { error: "削除するにはログインしてください。" };
+  const id = String(form.get("id") ?? "");
+  const { data, error } = await db
+    .from("conversations")
+    .delete()
+    .eq("id", id)
+    .eq("user_id", user.id)
+    .select("id")
+    .maybeSingle();
+  if (error || !data)
+    return {
+      error: "削除できませんでした。自分の投稿か、接続状態を確認してください。",
+    };
+  revalidatePath("/", "layout");
+  redirect("/");
+}

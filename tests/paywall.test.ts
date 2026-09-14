@@ -116,6 +116,43 @@ test("paywall is atomic, owner-only and reversible without losing content", asyn
       (await db.query("select * from public.conversations")).rows.length,
       1,
     );
+    await db.query("select public.set_conversation_paywall($1,2)", [id]);
+    await db.exec(`set request.jwt.claim.sub='${b}'`);
+    assert.equal(
+      (
+        await db.query(
+          "delete from public.conversations where id=$1 returning id",
+          [id],
+        )
+      ).rows.length,
+      0,
+    );
+    await db.exec(`reset role;set role anon;set request.jwt.claim.sub='';`);
+    await assert.rejects(
+      db.query("delete from public.conversations where id=$1", [id]),
+    );
+    await db.exec(
+      `reset role;set role authenticated;set request.jwt.claim.sub='${a}';`,
+    );
+    assert.equal(
+      (
+        await db.query(
+          "delete from public.conversations where id=$1 returning id",
+          [id],
+        )
+      ).rows.length,
+      1,
+    );
+    await db.exec("reset role");
+    assert.equal(
+      (await db.query("select * from public.conversation_paid_content")).rows
+        .length,
+      0,
+    );
+    assert.equal(
+      (await db.query("select * from public.conversations")).rows.length,
+      0,
+    );
   } finally {
     await db.close();
   }

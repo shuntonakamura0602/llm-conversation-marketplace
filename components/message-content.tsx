@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { MarkdownContent } from "@/components/markdown-content";
 import type { Message } from "@/lib/types";
 export function MessageContent({
   messages,
@@ -18,25 +18,5 @@ export function MessageContent({
       offset: Math.ceil((total * percent) / 100) - start,
     }))
     .filter((m) => m.offset > 0 && m.offset <= content.length);
-  let previous = 0;
-  const parts = markers.map(({ percent, offset }) => {
-    const text = content.slice(previous, offset);
-    previous = offset;
-    return (
-      <Fragment key={percent}>
-        {text}
-        <span
-          className="reading-marker"
-          data-reading-marker={percent}
-          aria-hidden="true"
-        />
-      </Fragment>
-    );
-  });
-  return (
-    <div className="message-content">
-      {parts}
-      {content.slice(previous)}
-    </div>
-  );
+  return <MarkdownContent content={content} markers={markers} />;
 }

@@ -1,3 +1,4 @@
+import { DeleteConversationForm } from "@/components/delete-conversation-form";
 import { PaidGate, PaywallSettings } from "@/components/paywall";
 import { MessageContent } from "@/components/message-content";
 import Link from "next/link";
@@ -63,6 +64,7 @@ export default async function Detail({
           <>
             {" "}
             <VisibilityForm id={id} published={c.published} />
+            <DeleteConversationForm id={id} />
             <PaywallSettings
               id={id}
               messages={c.messages}

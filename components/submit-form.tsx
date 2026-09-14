@@ -1,4 +1,5 @@
 "use client";
+import { MarkdownContent } from "@/components/markdown-content";
 import { useActionState, useState } from "react";
 import { Eye, Send, ShieldCheck } from "lucide-react";
 import { submitConversation } from "@/app/submit/actions";
@@ -164,7 +165,7 @@ export function SubmitForm() {
               messages?.map((m, i) => (
                 <section className={`message ${m.role}`} key={i}>
                   <strong>{m.role === "user" ? "You" : "Assistant"}</strong>
-                  <div className="message-content">{m.content}</div>
+                  <MarkdownContent content={m.content} />
                 </section>
               ))
             )}
