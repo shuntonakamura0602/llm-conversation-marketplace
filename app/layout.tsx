@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowUpRight, Plus, MessagesSquare } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { signOut } from "./submit/actions";
+import "katex/dist/katex.min.css";
 import "./globals.css";
 export const metadata: Metadata = {
   title: {

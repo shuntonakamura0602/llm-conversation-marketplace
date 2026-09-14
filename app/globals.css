@@ -1705,3 +1705,16 @@ textarea::placeholder {
   opacity: 0.5;
   cursor: wait;
 }
+
+.markdown-content .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.4em 0;
+}
+.markdown-content .katex {
+  font-size: 1.1em;
+  overflow-wrap: normal;
+}
+.markdown-content .katex p {
+  white-space: normal;
+}

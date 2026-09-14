@@ -1,5 +1,9 @@
 import Markdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import {
+  normalizeMath,
+  markdownRemarkPlugins,
+  markdownRehypePlugins,
+} from "@/lib/markdown";
 import { readingMarkers, type ReadingMarker } from "@/lib/reading-markers";
 
 export function MarkdownContent({
@@ -12,8 +16,8 @@ export function MarkdownContent({
   return (
     <div className="message-content markdown-content">
       <Markdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[[readingMarkers, markers]]}
+        remarkPlugins={markdownRemarkPlugins}
+        rehypePlugins={[[readingMarkers, markers], ...markdownRehypePlugins]}
         skipHtml
         components={{
           a: ({ children, href }) => (
@@ -36,7 +40,7 @@ export function MarkdownContent({
           ),
         }}
       >
-        {content}
+        {normalizeMath(content)}
       </Markdown>
     </div>
   );
