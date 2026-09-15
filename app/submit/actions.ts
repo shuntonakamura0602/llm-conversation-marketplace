@@ -123,15 +123,14 @@ export async function updateProfile(
     attributes.length > 150
   )
     return { error: "文字数を確認してください。", success: "" };
-  const { data, error } = await db
+  const { error } = await db
     .from("users")
     .update({ display_name, bio, attributes })
     .eq("id", user.id)
     .select("username")
     .single();
   if (error) return { error: "保存できませんでした。", success: "" };
-  revalidatePath(`/users/${data.username}`);
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { error: "", success: "プロフィールを保存しました。" };
 }
 export async function setVisibility(_state: { error: string }, form: FormData) {

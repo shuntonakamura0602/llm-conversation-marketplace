@@ -34,9 +34,14 @@ export default async function RootLayout({
                 会話を見つける
               </Link>
               {user ? (
-                <form action={signOut}>
-                  <button className="login-link">ログアウト</button>
-                </form>
+                <>
+                  <Link className="login-link" href="/profile">
+                    名前を変更
+                  </Link>
+                  <form action={signOut}>
+                    <button className="login-link">ログアウト</button>
+                  </form>
+                </>
               ) : (
                 <Link className="login-link" href="/login">
                   ログイン
