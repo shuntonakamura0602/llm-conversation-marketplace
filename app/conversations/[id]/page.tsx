@@ -121,7 +121,10 @@ export default async function Detail({
         )}
         <div className="conversation-body">
           {c.messages.map((m, i) => (
-            <section className={`message ${m.role}`} key={i}>
+            <section
+              className={`message ${m.role}${me?.id === c.user_id && c.free_message_count != null && i >= c.free_message_count ? " paid-message" : ""}`}
+              key={i}
+            >
               {i === c.free_message_count && (
                 <p className="paid-divider">
                   ここから有料 · 投稿者として全文を表示しています

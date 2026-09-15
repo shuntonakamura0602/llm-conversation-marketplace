@@ -1718,3 +1718,21 @@ textarea::placeholder {
 .markdown-content .katex p {
   white-space: normal;
 }
+
+/* Authors can distinguish the paid portion while reading the complete conversation. */
+.message.paid-message {
+  background: #e9ede5;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-left: 3px solid #82957c;
+}
+.message.paid-message .paid-divider {
+  margin-top: 0;
+  font-weight: 600;
+}
+@media (max-width: 640px) {
+  .message.paid-message {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}
